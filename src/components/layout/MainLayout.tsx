@@ -1,31 +1,32 @@
 import { Layout, Menu, MenuProps } from "antd";
+import { Link, Outlet } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const items: MenuProps['items'] = [
-    {
-        key: '01',
-        label: 'Dashboard'
-    },
-    {
-        key: '02',
-        label: 'Profile'
-    },
-    {
-        key: '03',
-        label: 'User Management',
-        children: [
-            {
-                key: '11',
-                label: 'Dashboard'
-            },
-            {
-                key: '22',
-                label: 'Profile'
-            },
-        ]
-    },
-]
+const items: MenuProps["items"] = [
+  {
+    key: "Dashboard",
+    label: <Link to={'/admin/dashboard'}>Dashboard</Link>,
+  },
+  {
+    key: "User Management",
+    label: "User Management",
+    children: [
+      {
+        key: "Create Admin",
+        label: <Link to={'/admin/create-admin'}>Create Admin</Link>,
+      },
+      {
+        key: "Create Faculty",
+        label: <Link to={'/admin/create-faculty'}>Create Faculty</Link>,
+      },
+      {
+        key: "Create Student",
+        label: <Link to={'/admin/create-student'}>Create Student</Link>,
+      },
+    ],
+  },
+];
 
 const MainLayout = () => {
   return (
@@ -41,7 +42,17 @@ const MainLayout = () => {
             console.log(collapsed, type);
           }}
         >
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '4rem'}} > <h1 style={{color: 'white'}}>UNI</h1></div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "4rem",
+            }}
+          >
+            {" "}
+            <h1 style={{ color: "white" }}>UNI</h1>
+          </div>
           <Menu
             theme="dark"
             mode="inline"
@@ -58,7 +69,7 @@ const MainLayout = () => {
                 minHeight: 360,
               }}
             >
-              <h1>The main content should go here</h1>
+              <Outlet />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
