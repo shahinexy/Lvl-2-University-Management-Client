@@ -11,8 +11,8 @@ export const facultyPath = [
         name: "User Management",
         children: [
           {
-            name: "Create Admin",
-            path: "create-admin",
+            name: "Create Offered Course",
+            path: "create-offered-course",
             element: <OfferedCourses />,
           },
         ],
