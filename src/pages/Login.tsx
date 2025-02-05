@@ -21,7 +21,6 @@ const Login = () => {
         id: data.userId,
         password: data.password,
       };
-      console.log(userInfo);
       const res = await login(userInfo).unwrap();
       const user = varifyToken(res.data.accessToken) as TUser;
       dispatch(setUser({ user, token: res.data.accessToken }));

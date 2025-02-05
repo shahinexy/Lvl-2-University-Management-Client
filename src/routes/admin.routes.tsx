@@ -1,4 +1,4 @@
-import AcademicSemester from "../pages/admin/AcademicManagement/academicSemester";
+import AcademicSemester from "../pages/admin/AcademicManagement/AcademicSemester";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import CreateAdmin from "../pages/admin/CreateAdmin";
 import Createfaculty from "../pages/admin/Createfaculty";
