@@ -1,14 +1,15 @@
 import { Button } from "antd";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setUser, TUser } from "../redux/features/auth/authSlice";
 import { varifyToken } from "../utils/verifyToken";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import HookForm from "../components/form/HookForm";
+import HookFormInput from "../components/form/HookFormInput";
 
 const Login = () => {
-  const { register, handleSubmit } = useForm();
   const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
   const navigate = useNavigate();
@@ -34,12 +35,12 @@ const Login = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("userId")} type="text" placeholder="User Id" />{" "}
+      <HookForm onSubmit={onSubmit}>
+        <HookFormInput type={"text"} name={"userId"} label={"ID: "} />
         <br /> <br />
-        <input {...register("password")} type="text" placeholder="Password" />
+        <HookFormInput type="text" name="password" label={"Password: "} />
         <Button htmlType="submit">Submit</Button>
-      </form>
+      </HookForm>
     </div>
   );
 };

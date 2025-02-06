@@ -5,7 +5,7 @@ import { routeGenerator } from "../utils/routesGenerator";
 import { facultyPath } from "./faculty.routes";
 import { studentPath } from "./student.routes";
 import Login from "../pages/Login";
-import ProtectedRoute from "../components/layout/protectedRoute";
+import ProtectedRoute from "./../components/layout/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
