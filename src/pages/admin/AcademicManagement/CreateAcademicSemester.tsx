@@ -4,6 +4,8 @@ import { Button } from "antd";
 import HookFormSelector from "../../../components/form/HookFormSelector";
 import { semesterOptions } from "../../../constants/semester";
 import { monthOptions } from "../../../constants/global";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { academicSemesterSchema } from "../../../schemas/academicManagement.schema";
 
 const currentYerar = new Date().getFullYear();
 
@@ -24,9 +26,13 @@ const CreateAcademicSemester = () => {
     };
     console.log(submitResult);
   };
+
   return (
     <div>
-      <HookForm onSubmit={onSubmit}>
+      <HookForm
+        onSubmit={onSubmit}
+        resolver={zodResolver(academicSemesterSchema)}
+      >
         <HookFormSelector
           label={"Name"}
           name={"name"}
