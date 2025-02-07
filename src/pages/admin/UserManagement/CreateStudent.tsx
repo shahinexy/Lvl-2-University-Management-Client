@@ -4,6 +4,12 @@ import HookFormInput from "../../../components/form/HookFormInput";
 import { Button, Divider } from "antd";
 import HookFormSelector from "../../../components/form/HookFormSelector";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
+import HookFormDatePicker from "../../../components/form/HookFormDatePicker";
+import {
+  useGetAllAcademicDepartmentQuery,
+  useGetAllSemesterQuery,
+} from "../../../redux/features/admin/academicManagement.api";
+import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
 
 const dummyData = {
   password: "Example123",
@@ -41,7 +47,6 @@ const studentDummyData = {
     lastName: "Doe",
   },
   gender: "male",
-  dateOfBirth: "2005-07-15",
   email: "test@xample.com",
   contactNo: "1234567890",
   emergancyNo: "1234567890",
@@ -55,14 +60,45 @@ const studentDummyData = {
     motherOccupation: "Teacher",
     motherContactNo: "+123456789012345",
   },
-  admissionSemester: "6797596d4973e16e6b7d8bb9",
-  academicDepartment: "679759017ad0a59b860b24d0",
-  isDeleted: false,
 };
 
 const CreateStudent = () => {
+
+  const [addStudent, {data, error}] = useAddStudentMutation()
+
+  console.log(data);
+  console.log(error);
+
+  const { data: sData, isLoading: sIsloading } =
+    useGetAllSemesterQuery(undefined);
+
+  const { data: dData, isLoading: dIsloading } =
+    useGetAllAcademicDepartmentQuery(undefined);
+
+  const semesterOptions = sData?.data?.map((item) => ({
+    value: item._id,
+    label: `${item.name} ${item.year}`,
+  }));
+
+  const departmentOptions = dData?.data?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+
   const onsubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+
+    const studentData = {
+      password: "Student123",
+      student: data
+    }
+
+    const formData = new FormData()
+
+    formData.append('data', JSON.stringify(studentData))
+
+    addStudent(formData)
+
+    console.log(Object.fromEntries(formData));
   };
   return (
     <div>
@@ -88,7 +124,7 @@ const CreateStudent = () => {
             label="Gender"
             options={genderOptions}
           />
-          <HookFormInput type="text" name="dateOfBirth" label="Date Of Birth" />
+          <HookFormDatePicker name="dateOfBirth" label="Date Of Birth" />
 
           <HookFormSelector
             name="bloodGroup"
@@ -128,7 +164,11 @@ const CreateStudent = () => {
             name="gurdian.fatherContactNo"
             label="Father Contact No"
           />
-          <HookFormInput type="text" name="gurdian.motherName" label="Mother Name" />
+          <HookFormInput
+            type="text"
+            name="gurdian.motherName"
+            label="Mother Name"
+          />
           <HookFormInput
             type="text"
             name="gurdian.motherOccupation"
@@ -143,24 +183,27 @@ const CreateStudent = () => {
 
         <Divider>Academic Info</Divider>
 
-        {/* <div
+        <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "20px",
           }}
         >
-          <HookFormInput
-            type="text"
+          <HookFormSelector
             name="admissionSemester"
             label="Admission Semester"
+            options={semesterOptions}
+            disabled={sIsloading}
           />
-          <HookFormInput
-            type="text"
+
+          <HookFormSelector
             name="academicDepartment"
-            label="Academic Department"
+            label="Admission Department"
+            options={departmentOptions}
+            disabled={dIsloading}
           />
-        </div> */}
+        </div>
 
         <Button htmlType="submit">Submit</Button>
       </HookForm>
