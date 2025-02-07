@@ -1,19 +1,20 @@
 import { Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicManagement.api";
+import { TAcademicSemester } from "../../../types/academicSemester.type";
+import { useState } from "react";
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
-
+type DataType = Pick<
+  TAcademicSemester,
+  "_id" | "name" | "year" | "startMonth" | "endMonth"
+>;
+// [{name: 'year', value: '2026'}]
 const AcademicSemester = () => {
-  const { data: semesterData } = useGetAllSemesterQuery(undefined);
+  const [params, setParams] = useState([]);
+  const { data: semesterData } = useGetAllSemesterQuery(params);
 
   const tableData = semesterData?.data?.map(
     ({ _id, name, year, startMonth, endMonth }) => ({
-      _id,
+      key: _id,
       name,
       year,
       startMonth,
@@ -28,32 +29,37 @@ const AcademicSemester = () => {
       showSorterTooltip: { target: "full-header" },
       filters: [
         {
-          text: "Joe",
-          value: "Joe",
+          text: "Autumn",
+          value: "Autumn",
         },
         {
-          text: "Jim",
-          value: "Jim",
+          text: "Summer",
+          value: "Summer",
         },
         {
-          text: "Submenu",
-          value: "Submenu",
-          children: [
-            {
-              text: "Green",
-              value: "Green",
-            },
-            {
-              text: "Black",
-              value: "Black",
-            },
-          ],
+          text: "Fall",
+          value: "Fall",
         },
       ],
     },
     {
       title: "Year",
       dataIndex: "year",
+      showSorterTooltip: { target: "full-header" },
+      filters: [
+        {
+          text: "2025",
+          value: "2025",
+        },
+        {
+          text: "2026",
+          value: "2026",
+        },
+        {
+          text: "2027",
+          value: "2027",
+        },
+      ],
     },
     {
       title: "Start Month",
@@ -71,12 +77,24 @@ const AcademicSemester = () => {
     sorter,
     extra
   ) => {
-    console.log("params", pagination, filters, sorter, extra);
+    if (extra.action === "filter") {
+      const queryParams = [];
+
+      filters.name?.forEach((item) =>
+        queryParams.push({ name: "name", value: item })
+      );
+
+      filters.year?.forEach((item) =>
+        queryParams.push({ name: "year", value: item })
+      );
+
+      setParams(queryParams);
+    }
   };
 
   return (
     <div>
-      <Table
+      <Table<DataType>
         columns={columns}
         dataSource={tableData}
         onChange={onChange}
