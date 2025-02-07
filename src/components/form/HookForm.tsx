@@ -8,6 +8,7 @@ import {
 
 type TFormCOnfig = {
   resolver?: any;
+  defaultValues?: Record<string, any>;
 };
 
 type TFormProps = {
@@ -15,8 +16,17 @@ type TFormProps = {
   children: ReactNode;
 } & TFormCOnfig;
 
-const HookForm = ({ onSubmit, children, resolver }: TFormProps) => {
+const HookForm = ({
+  onSubmit,
+  children,
+  resolver,
+  defaultValues,
+}: TFormProps) => {
   const formConfig: TFormCOnfig = {};
+
+  if (defaultValues) {
+    formConfig["defaultValues"] = defaultValues;
+  }
 
   if (resolver) {
     formConfig["resolver"] = resolver;
