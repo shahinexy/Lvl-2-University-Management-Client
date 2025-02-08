@@ -16,5 +16,5 @@ export type TSidebardItem = {
     key: string;
     label: ReactNode;
     children?: TSidebardItem[];
-  };
+  } | undefined;
   

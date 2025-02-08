@@ -11,35 +11,6 @@ import {
 } from "../../../redux/features/admin/academicManagement.api";
 import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
 
-const dummyData = {
-  password: "Example123",
-  student: {
-    name: {
-      firstName: "test",
-      middleName: "A.",
-      lastName: "Doe",
-    },
-    gender: "male",
-    dateOfBirth: "2005-07-15",
-    email: "test@xample.com",
-    contactNo: "1234567890",
-    emergancyNo: "1234567890",
-    bloodGroup: "O+",
-    address: "123 Maple Street, Springfield, USA",
-    gurdian: {
-      fatherName: "Robert Doe",
-      fatherOccupation: "Engineer",
-      fatherContactNo: "+123456789012345",
-      motherName: "Jane Doe",
-      motherOccupation: "Teacher",
-      motherContactNo: "+123456789012345",
-    },
-    admissionSemester: "6797596d4973e16e6b7d8bb9",
-    academicDepartment: "679759017ad0a59b860b24d0",
-    isDeleted: false,
-  },
-};
-
 const studentDummyData = {
   name: {
     firstName: "test",

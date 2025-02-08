@@ -5,6 +5,7 @@ import CreateAcademicDepartment from "../pages/admin/AcademicManagement/CreateAc
 import CreateAcademicFaculty from "../pages/admin/AcademicManagement/CreateAcademicFaculty";
 import CreateAcademicSemester from "../pages/admin/AcademicManagement/CreateAcademicSemester";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import SemesterRegestration from "../pages/admin/courseManagement/SemesterRegestration";
 import CreateAdmin from "../pages/admin/UserManagement/CreateAdmin";
 import Createfaculty from "../pages/admin/UserManagement/Createfaculty";
 import CreateStudent from "../pages/admin/UserManagement/CreateStudent";
@@ -81,6 +82,16 @@ export const adminPaths = [
       },
     ],
   },
+  {
+    name: 'Course Management',
+    children: [
+      {
+        name: "Semester Registration",
+        path: "semester-registration",
+        element: <SemesterRegestration />,
+      },
+    ]
+  }
 ];
 
 // admin routes
