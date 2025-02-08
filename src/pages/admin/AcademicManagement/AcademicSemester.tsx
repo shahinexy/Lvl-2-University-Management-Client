@@ -8,7 +8,7 @@ type DataType = Pick<
   TAcademicSemester,
   "name" | "year" | "startMonth" | "endMonth"
 >;
-// [{name: 'year', value: '2026'}]
+
 const AcademicSemester = () => {
   const [params, setParams] = useState<TQueryParams[] | undefined>(undefined);
   const { data: semesterData, isFetching } = useGetAllSemesterQuery(params);
