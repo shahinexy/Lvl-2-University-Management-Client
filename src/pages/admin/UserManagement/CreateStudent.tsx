@@ -1,7 +1,7 @@
-import { FieldValues, SubmitHandler } from "react-hook-form";
+import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
 import HookForm from "../../../components/form/HookForm";
 import HookFormInput from "../../../components/form/HookFormInput";
-import { Button, Divider } from "antd";
+import { Button, Divider, Form, Input } from "antd";
 import HookFormSelector from "../../../components/form/HookFormSelector";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import HookFormDatePicker from "../../../components/form/HookFormDatePicker";
@@ -63,8 +63,7 @@ const studentDummyData = {
 };
 
 const CreateStudent = () => {
-
-  const [addStudent, {data, error}] = useAddStudentMutation()
+  const [addStudent, { data, error }] = useAddStudentMutation();
 
   console.log(data);
   console.log(error);
@@ -86,17 +85,19 @@ const CreateStudent = () => {
   }));
 
   const onsubmit: SubmitHandler<FieldValues> = (data) => {
-
+    console.log('In data',data.profileImg);
     const studentData = {
       password: "Student123",
-      student: data
-    }
+      student: data,
+    };
 
-    const formData = new FormData()
+    const formData = new FormData();
 
-    formData.append('data', JSON.stringify(studentData))
+    formData.append("data", JSON.stringify(studentData));
 
-    addStudent(formData)
+    formData.append('file', data.profileImg)
+
+    addStudent(formData);
 
     console.log(Object.fromEntries(formData));
   };
@@ -130,6 +131,15 @@ const CreateStudent = () => {
             name="bloodGroup"
             label="Blood Group"
             options={bloodGroupOptions}
+          />
+
+          <Controller
+            name="profileImg"
+            render={({field: {onChange, value, ...field}}) => (
+              <Form.Item label={"Profile Image"}>
+                <Input type="file" {...field} value={value?.fileName} onChange={(e)=> onChange(e.target.files?.[0])}/>
+              </Form.Item>
+            )}
           />
         </div>
         <Divider>Contact Info</Divider>
