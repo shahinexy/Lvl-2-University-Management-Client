@@ -54,7 +54,11 @@ const SemesterRegestration = () => {
           options={academicSemesterOptions}
         />
 
-        <HookFormSelector  name="status" label="Status" options={semesterStatusOptions}/>
+        <HookFormSelector
+          name="status"
+          label="Status"
+          options={semesterStatusOptions}
+        />
 
         <HookFormInput type="number" name="maxCredit" label="Max Credit" />
         <HookFormInput type="number" name="mainCredit" label="Main Credit" />
