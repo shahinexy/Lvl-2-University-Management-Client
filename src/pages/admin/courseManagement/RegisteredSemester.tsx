@@ -1,7 +1,6 @@
 import {
   Button,
   Dropdown,
-  Pagination,
   Table,
   TableColumnsType,
   TableProps,
@@ -9,9 +8,10 @@ import {
 } from "antd";
 import { useState } from "react";
 import { TQueryParams } from "../../../types/global";
-import { useGetAllRegesteredSemesterQuery } from "../../../redux/features/admin/courseManagement.api";
+import { useGetAllRegesteredSemesterQuery, useUpdateSemesterRegistrationMutation } from "../../../redux/features/admin/courseManagement.api";
 import { TSemester } from "../../../types/courseManagement.type";
 import moment from "moment";
+import { FieldValues } from "react-hook-form";
 
 type DataType = Pick<
   TSemester,
@@ -34,14 +34,14 @@ const items = [
   ];
 
 const RegisteredSemester = () => {
-  const [params, setParams] = useState<TQueryParams[]>([]);
+  const [semesterId, setsemesterId] = useState()
 
-  const [page, setPage] = useState(2);
+  const [params, setParams] = useState<TQueryParams[]>([]);
 
   const { data: studentData, isFetching } =
     useGetAllRegesteredSemesterQuery(params);
 
-  const metaData = studentData?.meta;
+    const [updateSemester] = useUpdateSemesterRegistrationMutation()
 
   const tableData = studentData?.data?.map(
     ({ _id, academicSemester, startDate, endDate, status }) => ({
@@ -53,8 +53,15 @@ const RegisteredSemester = () => {
     })
   );
 
-  const handleStatusUpdate = (data) => {
-   console.log(data);
+  const handleStatusUpdate = (data: FieldValues) => {
+   const updateData ={
+    id: semesterId,
+    data: {
+      status: data.key
+    }
+   }
+   
+   updateSemester(updateData)
   };
 
   const menuProps = {
@@ -96,8 +103,8 @@ const RegisteredSemester = () => {
       title: "Action",
       render: (item) => {
         return (
-          <Dropdown menu={menuProps}>
-            <Button>Update</Button>
+          <Dropdown menu={menuProps} trigger={['click']}>
+            <Button onClick={() =>setsemesterId(item.key)}>Update</Button>
           </Dropdown>
         );
       },
@@ -134,11 +141,6 @@ const RegisteredSemester = () => {
         onChange={onChange}
         showSorterTooltip={{ target: "sorter-icon" }}
         pagination={false}
-      />
-      <Pagination
-        onChange={(value) => setPage(value)}
-        pageSize={metaData?.limit}
-        total={metaData?.total}
       />
     </div>
   );
