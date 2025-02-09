@@ -3,37 +3,42 @@ import HookForm from "../../../components/form/HookForm";
 import { Button } from "antd";
 import HookFormSelector from "../../../components/form/HookFormSelector";
 import { toast } from "sonner";
-import { useAddSemesterRegistrationMutation } from "../../../redux/features/admin/courseManagement.api";
-import HookFormDatePicker from "../../../components/form/HookFormDatePicker";
-import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicManagement.api";
+import {
+  useAddCourseMutation,
+  useGetAllCoureseQuery,
+} from "../../../redux/features/admin/courseManagement.api";
 import HookFormInput from "../../../components/form/HookFormInput";
-import { TSemester } from "../../../types/courseManagement.type";
+import { TCourse } from "../../../types/courseManagement.type";
 import { TResponse } from "../../../types/global";
-import { semesterStatusOptions } from "../../../constants/semester";
 
 const CreateCourse = () => {
-  const [addSemesterRegistration] = useAddSemesterRegistrationMutation();
+  const [createCourse] = useAddCourseMutation();
 
-  const { data } = useGetAllSemesterQuery([{ name: "sort", value: "year" }]);
+  const { data } = useGetAllCoureseQuery(undefined);
 
-  const academicSemesterOptions = data?.data?.map((item) => ({
+  const courseOptions = data?.data?.map((item) => ({
     value: item._id,
-    label: `${item.name} ${item.year}`,
+    label: item.title,
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("creating...");
 
-    const semesterRegisterData = {
+    const courseData = {
       ...data,
-      maxCredit: Number(data.maxCredit),
-      mainCredit: Number(data.mainCredit),
+      code: Number(data.code),
+      credits: Number(data.credits),
+      isDeleted: false,
+      preRequisiteCourses: data.preRequisiteCourses
+        ? data.preRequisiteCourses?.map((item) => ({
+            course: item,
+            isDeleted: false,
+          }))
+        : [],
     };
-
+    console.log(courseData);
     try {
-      const res = (await addSemesterRegistration(
-        semesterRegisterData
-      )) as TResponse<TSemester>;
+      const res = (await createCourse(courseData)) as TResponse<TCourse>;
       console.log(res);
       if (res.error) {
         toast.error(res.error.data.message, { id: toastId });
@@ -48,23 +53,17 @@ const CreateCourse = () => {
   return (
     <div>
       <HookForm onSubmit={onSubmit}>
-        <HookFormSelector
-          label={"Academic Semester"}
-          name={"academicSemester"}
-          options={academicSemesterOptions}
-        />
+        <HookFormInput type="text" name="title" label="Title" />
+        <HookFormInput type="text" name="prefix" label="Prefix" />
+        <HookFormInput type="text" name="code" label="Code" />
+        <HookFormInput type="text" name="credits" label="Credits" />
 
         <HookFormSelector
-          name="status"
-          label="Status"
-          options={semesterStatusOptions}
+          mode="multiple"
+          label={"Pre-Requisite Courses"}
+          name={"preRequisiteCourses"}
+          options={courseOptions}
         />
-
-        <HookFormInput type="number" name="maxCredit" label="Max Credit" />
-        <HookFormInput type="number" name="mainCredit" label="Main Credit" />
-
-        <HookFormDatePicker name="startDate" label="Start Date" />
-        <HookFormDatePicker name="endDate" label="End Date" />
 
         <Button htmlType="submit">Submit</Button>
       </HookForm>

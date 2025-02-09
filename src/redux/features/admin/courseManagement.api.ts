@@ -1,4 +1,4 @@
-import { TSemester } from "../../../types/courseManagement.type";
+import { TCourse, TSemester } from "../../../types/courseManagement.type";
 import { TQueryParams, TResponseRedux } from "../../../types/global";
 import { baseApi } from "../../api/baseApi";
 
@@ -26,7 +26,7 @@ const courseManagementApi = baseApi.injectEndpoints({
         };
       },
 
-      providesTags: ['semester']
+      providesTags: ["semester"],
     }),
 
     addSemesterRegistration: builder.mutation({
@@ -35,7 +35,7 @@ const courseManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ['semester']
+      invalidatesTags: ["semester"],
     }),
 
     updateSemesterRegistration: builder.mutation({
@@ -44,13 +44,51 @@ const courseManagementApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: args.data,
       }),
-      invalidatesTags: ['semester']
+      invalidatesTags: ["semester"],
     }),
+
+    getAllCourese: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item: TQueryParams) =>
+            params.append(item.name, item.value as string)
+          );
+        }
+        return {
+          url: "/courses",
+          method: "GET",
+          params: params,
+        };
+      },
+      transformResponse: (response: TResponseRedux<TCourse[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+
+      providesTags: ['course']
+    }),
+
+    addCourse: builder.mutation({
+      query: (data) => ({
+        url: "/courses/create-course",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["course"],
+    }),
+
+
   }),
 });
 
 export const {
   useAddSemesterRegistrationMutation,
   useGetAllRegesteredSemesterQuery,
-  useUpdateSemesterRegistrationMutation
+  useUpdateSemesterRegistrationMutation,
+  useGetAllCoureseQuery,
+  useAddCourseMutation
 } = courseManagementApi;
