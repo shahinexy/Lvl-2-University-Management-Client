@@ -4,22 +4,21 @@ import { baseApi } from "../../api/baseApi";
 
 const userManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-
     getAllStudents: builder.query({
-      query: (args) =>{
-        const params = new URLSearchParams()
+      query: (args) => {
+        const params = new URLSearchParams();
 
-        if(args){
+        if (args) {
           args.forEach((item: TQueryParams) => {
-            params.append(item.name, item.value as string)
+            params.append(item.name, item.value as string);
           });
         }
 
         return {
-          url: '/students',
+          url: "/students",
           method: "GET",
-          params: params
-        }
+          params: params,
+        };
       },
       transformResponse: (response: TResponseRedux<TStudent[]>) => {
         return {
@@ -36,7 +35,32 @@ const userManagementApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    getAllFaculties: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item: TQueryParams) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+
+        return {
+          url: "/faculties",
+          method: "GET",
+          params: params,
+        };
+      },
+      transformResponse: (response: TResponseRedux<any>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
   }),
 });
 
-export const { useAddStudentMutation, useGetAllStudentsQuery } = userManagementApi;
+export const { useAddStudentMutation, useGetAllStudentsQuery, useGetAllFacultiesQuery } =
+  userManagementApi;
