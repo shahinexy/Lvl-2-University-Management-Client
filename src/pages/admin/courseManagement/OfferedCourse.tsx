@@ -5,6 +5,7 @@ import { FieldValues } from "react-hook-form";
 import {
   useGetAllCoureseQuery,
   useGetAllRegesteredSemesterQuery,
+  useGetCourseFacultiesQuery,
 } from "../../../redux/features/admin/courseManagement.api";
 import {
   useGetAllAcademicDepartmentQuery,
@@ -13,10 +14,12 @@ import {
 import { useGetAllFacultiesQuery } from "../../../redux/features/admin/userManagement.api";
 import SelectorWithWatch from "../../../components/form/SelectorWithWatch";
 import { useState } from "react";
+import HookFormInput from "../../../components/form/HookFormInput";
+import { weekDaysOptions } from "../../../constants/global";
+import HookFormTimePicker from "../../../components/form/HookFormTimePicker";
 
 const OfferedCourse = () => {
   const [courseId, setCourseId] = useState("");
-  console.log(courseId);
 
   const { data: semester } = useGetAllRegesteredSemesterQuery(undefined);
 
@@ -47,9 +50,10 @@ const OfferedCourse = () => {
     label: item.title,
   }));
 
-  const { data: facultyData } = useGetAllFacultiesQuery(undefined);
+  const { data: facultyData, isFetching: isFacultyFetching } =
+    useGetCourseFacultiesQuery(courseId, { skip: !courseId });
 
-  const facultyOptions = facultyData?.data.map((item) => ({
+  const facultyOptions = facultyData?.data?.faculties.map((item) => ({
     label: item.fullName,
     value: item._id,
   }));
@@ -83,11 +87,23 @@ const OfferedCourse = () => {
           options={courseOptions}
         />
         <HookFormSelector
-          disabled={!courseId}
+          disabled={!courseId || isFacultyFetching}
           label={"Faculties"}
           name={"faculty"}
           options={facultyOptions}
         />
+
+        <HookFormInput type="text" name="section" label="Section" />
+        <HookFormInput type="text" name="maxCapacity" label="Max Capacity" />
+
+        <HookFormSelector label="Days" name="days" options={weekDaysOptions} />
+
+        <HookFormTimePicker
+          label="Start Time"
+          name="startTime"
+          format="HH:mm"
+        />
+        <HookFormTimePicker label="End Time" name="endTime" format="HH:mm" />
 
         <Button htmlType="submit">Submit</Button>
       </HookForm>
