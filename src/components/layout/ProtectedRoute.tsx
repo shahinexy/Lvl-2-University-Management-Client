@@ -2,10 +2,11 @@ import { ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   logout,
-  seletCurrentuser,
+  TUser,
   useCurrentToken,
 } from "../../redux/features/auth/authSlice";
 import { Navigate } from "react-router-dom";
+import { varifyToken } from "../../utils/verifyToken";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -14,8 +15,13 @@ type ProtectedRouteProps = {
 
 const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   const token = useAppSelector(useCurrentToken);
-  const user = useAppSelector(seletCurrentuser);
   const dispatch = useAppDispatch();
+
+  let user;
+
+  if(token){
+    user = varifyToken(token) as TUser
+  }
 
   if (role !== undefined && role !== user?.role) {
     dispatch(logout());

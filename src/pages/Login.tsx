@@ -27,14 +27,20 @@ const Login = () => {
       dispatch(setUser({ user, token: res.data.accessToken }));
 
       toast.success("Login success", { id: toastId });
-      navigate(`/${user.role}/dashboard`);
+
+      if (res.data.needPasswordChange) {
+        navigate("/change-password");
+      } else {
+        navigate(`/${user.role}/dashboard`);
+      }
     } catch (err) {
-      toast.error("Somthing went wrong", { id: toastId });
+      toast.error(err.data?.message, { id: toastId });
     }
   };
 
   return (
     <div>
+      <h1>Login Now</h1>
       <HookForm onSubmit={onSubmit}>
         <HookFormInput type={"text"} name={"userId"} label={"ID: "} />
         <br /> <br />
